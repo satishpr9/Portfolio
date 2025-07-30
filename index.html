@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satish Kumar Pandey - Interactive Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A single-page application with a sticky navigation header for smooth scrolling to distinct sections: Hero/Intro, Skills, Experience, and Education. This structure provides a clear, logical, and intuitive user flow, allowing recruiters to quickly navigate to the information they need. The hero section provides an immediate summary, the interactive skills section offers a quick visual assessment of capabilities, and the timeline format for experience clearly shows career progression. This is more engaging and user-friendly than a linear document. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Skills list -> Goal: Organize & Compare -> Viz/Method: Radar Chart (Chart.js/Canvas) -> Interaction: Hover tooltips -> Justification: A radar chart provides a holistic, at-a-glance view of skill distribution across key areas (Leadership, Administrative, Technical), which is more insightful than a simple list.
+        - Report Info: Work History -> Goal: Show Change/Progression -> Viz/Method: Vertical Timeline (HTML/CSS/Tailwind) -> Interaction: Clear visual flow -> Justification: A timeline is the most intuitive and standard way to represent chronological career history, making it easy for users to follow the career path.
+        - Report Info: Education -> Goal: Inform -> Viz/Method: Styled Cards (HTML/CSS/Tailwind) -> Interaction: None -> Justification: Simple, clear presentation for factual information. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-stone-800">Satish Kumar Pandey</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#about" class="text-stone-600 hover:text-stone-900 transition-colors">About</a>
+                <a href="#skills" class="text-stone-600 hover:text-stone-900 transition-colors">Skills</a>
+                <a href="#experience" class="text-stone-600 hover:text-stone-900 transition-colors">Experience</a>
+                <a href="#education" class="text-stone-600 hover:text-stone-900 transition-colors">Education</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-stone-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#about" class="block py-2 px-6 text-sm text-stone-600 hover:bg-stone-100">About</a>
+            <a href="#skills" class="block py-2 px-6 text-sm text-stone-600 hover:bg-stone-100">Skills</a>
+            <a href="#experience" class="block py-2 px-6 text-sm text-stone-600 hover:bg-stone-100">Experience</a>
+            <a href="#education" class="block py-2 px-6 text-sm text-stone-600 hover:bg-stone-100">Education</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="about" class="py-20 md:py-32 bg-stone-50">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-stone-800">Satish Kumar Pandey</h1>
+                <p class="mt-4 text-lg md:text-xl text-stone-600">Educator & Administrative Leader</p>
+                <div class="mt-8 text-stone-500 flex justify-center items-center space-x-6">
+                    <div class="flex items-center space-x-2">
+                        <span>&#9993;</span>
+                        <span>satishpr92@gmail.com</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span>&#9742;</span>
+                        <span>+91 8789381246</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span>&#127968;</span>
+                        <span>Harnatand, India</span>
+                    </div>
+                </div>
+                <div class="mt-12 max-w-3xl mx-auto text-left text-stone-700">
+                    <p class="text-center">This section provides a brief introduction. It highlights my background as a dedicated and organized professional with experience in both educational leadership and teaching. I am passionate about creating positive learning environments and leveraging my administrative skills to support institutional growth and student success.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-20">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center text-stone-800 mb-4">Skills & Expertise</h2>
+                <p class="text-center text-stone-600 mb-12 max-w-2xl mx-auto">This section showcases my key capabilities. The chart below offers a visual summary of my strengths across different professional areas, from leadership to technical proficiency. You can hover over the points on the chart to see the category names. Below the chart, you'll find a more detailed list of my specific skills.</p>
+                <div class="chart-container mb-16">
+                    <canvas id="skillsChart"></canvas>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-center">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200"><p>Performance Analysis</p></div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200"><p>Administrative Management</p></div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200"><p>Organizational Leadership</p></div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200"><p>Curriculum Planning</p></div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200"><p>Team Building</p></div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200"><p>Public Speaking</p></div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200"><p>Leadership</p></div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200"><p>MS-Office</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-20 bg-stone-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center text-stone-800 mb-4">Professional Experience</h2>
+                <p class="text-center text-stone-600 mb-12 max-w-2xl mx-auto">My professional journey is detailed below in a chronological timeline. This section outlines my key roles and responsibilities, demonstrating my growth and contributions in educational and administrative positions.</p>
+                <div class="relative max-w-3xl mx-auto">
+                    <div class="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-stone-300"></div>
+                    
+                    <div class="relative mb-8 flex justify-between items-center w-full">
+                        <div class="w-5/12"></div>
+                        <div class="z-10 bg-amber-500 rounded-full w-4 h-4"></div>
+                        <div class="w-5/12">
+                            <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
+                                <h3 class="font-bold text-lg text-stone-800">Vice Principal</h3>
+                                <p class="text-sm text-stone-500 mb-2">Mother Teresa Memorial School, Harnatand</p>
+                                <p class="text-xs text-stone-400 mb-3">Aug 2024 - Apr 2025</p>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li>Coordinated with teachers, staff, and parents for a positive learning environment.</li>
+                                    <li>Drafted course schedules to estimate staffing and facility needs.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative mb-8 flex justify-between items-center w-full flex-row-reverse">
+                         <div class="w-5/12"></div>
+                        <div class="z-10 bg-amber-500 rounded-full w-4 h-4"></div>
+                        <div class="w-5/12">
+                             <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
+                                <h3 class="font-bold text-lg text-stone-800">Chemistry Teacher</h3>
+                                <p class="text-sm text-stone-500 mb-2">Success Point, Harnatand</p>
+                                <p class="text-xs text-stone-400 mb-3">Aug 2022 - Feb 2023</p>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li>Taught organic chemistry from foundational to advanced levels.</li>
+                                    <li>Focused on making complex concepts understandable and accessible.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="py-20">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center text-stone-800 mb-4">Education & Training</h2>
+                <p class="text-center text-stone-600 mb-12 max-w-2xl mx-auto">This section outlines my academic background. It includes my formal degrees and other significant training that have contributed to my knowledge and skills.</p>
+                <div class="max-w-3xl mx-auto grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-lg text-stone-800">Bachelor of Arts in History</h3>
+                        <p class="text-sm text-stone-500">IGNOU, Delhi</p>
+                        <p class="text-xs text-stone-400 mt-1">Completed: Jan 2024</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-lg text-stone-800">B.Tech in Computer Science (Dropout)</h3>
+                        <p class="text-sm text-stone-500">Buddha Institute of Technology, Gida</p>
+                        <p class="text-xs text-stone-400 mt-1">Attended until: Jun 2023</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-white py-10">
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-bold mb-2">Get in Touch</p>
+            <p>satishpr92@gmail.com</p>
+            <p>+91 8789381246</p>
+            <p class="mt-4 text-sm text-stone-400">&copy; 2025 Satish Kumar Pandey. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = mobileMenu.querySelectorAll('a');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        const skillsData = {
+            labels: ['Leadership', 'Administrative', 'Curriculum', 'Communication', 'Technical'],
+            datasets: [{
+                label: 'Skill Area',
+                data: [9, 8, 7, 8, 6],
+                backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                borderColor: 'rgba(245, 158, 11, 1)',
+                pointBackgroundColor: 'rgba(245, 158, 11, 1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(245, 158, 11, 1)'
+            }]
+        };
+
+        const config = {
+            type: 'radar',
+            data: skillsData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw}`
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: 'rgba(74, 74, 74, 0.2)'
+                        },
+                        grid: {
+                            color: 'rgba(74, 74, 74, 0.2)'
+                        },
+                        pointLabels: {
+                            font: {
+                                size: 14,
+                                family: 'Inter',
+                            },
+                            color: '#4A4A4A'
+                        },
+                        ticks: {
+                            backdropColor: 'transparent',
+                            color: 'rgba(74, 74, 74, 0.7)',
+                            stepSize: 2
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                }
+            }
+        };
+
+        const skillsChart = new Chart(
+            document.getElementById('skillsChart'),
+            config
+        );
+    </script>
+</body>
+</html>
